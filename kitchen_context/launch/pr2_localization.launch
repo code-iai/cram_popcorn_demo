@@ -1,0 +1,38 @@
+<launch>
+  <include file="$(find pr2_machine)/$(env ROBOT).machine" />
+
+  <include file="$(find pr2_navigation_perception)/lasers_and_filters.xml"/>
+  <include file="$(find pr2_navigation_perception)/ground_plane.xml"/>
+  <include file="$(find pr2_navigation_global)/amcl_node.xml" />
+  <!-- include file="$(find pr2_navigation_global)/move_base.xml" /-->
+  <include file="$(find pr2_teleop)/launch/teleop_joystick.launch" />
+
+  <node name="map_server" 
+        pkg="map_server" 
+        type="map_server" 
+        args="$(find kitchen_context)/maps/popcorn_map.yaml" />
+
+  <param name="/move_base_node/footprint_padding" value="0.03"/>
+  <param name="/move_base_node/TrajectoryPlannerROS/min_in_place_rotational_vel" value="0.1"/>
+  <param name="/move_base_node/TrajectoryPlannerROS/xy_goal_tolerance" value="0.1"/>
+  <param name="/move_base_node/TrajectoryPlannerROS/yaw_goal_tolerance" value="0.05"/>
+
+  <!-- reinitialize the pose of the robot each time it "feels" lost" -->
+  <include file="$(find snap_map_icp)/launch/snap_map_icp.launch" />
+
+  <!-- move PR2's torso into initial position. -->
+  <include file="$(find kitchen_context)launch/move_pr2_torso_into_initial_position.launch"/>
+
+  <!-- move PR2's base into initial pose -->
+  <include file="$(find kitchen_context)launch/move_pr2_base_into_initial_pose.launch"/>
+
+  <!-- move PR2's arms into ready position -->
+  <!-- TODO(lisca): put both arms into their specific joint configuration -->
+  <!--
+  <include file="$(find kitchen_context)launch/move_pr2_arms_into_initial_configuration.launch"/>
+  -->
+
+  <!-- start the nav_pcontroller for navigating PR2's base -->
+  <include file="$(find nav_pcontroller)/launch/pr2_nav_pcontroller.launch" />
+
+</launch>

@@ -1,0 +1,27 @@
+<launch>
+
+  <!-- this launch file publishes on the topic "pub_topic_name" the position
+       in which PR2's torso must be -->
+
+  <arg name="pub_topic_name" value="/torso_controller/position_joint_action/goal"/> 
+  <arg name="pub_topic_type" value="pr2_controllers_msgs/SingleJointPositionActionGoal"/> 
+  <arg name="pub_topic_message" value='"{header: {seq: 0, 
+                                                  stamp: {secs: 0, 
+                                                          nsecs: 0}, 
+                                                  frame_id: },
+                                        goal_id: {stamp: {secs: 0, 
+                                                          nsecs: 0}, 
+                                                  id: },
+                                        goal: {position: 0.3, 
+                                               min_duration: {secs: 0, 
+                                                              nsecs: 0}, 
+                                               max_velocity: 0.0}}"' />
+
+  <node name="torso_initial" 
+        pkg="rostopic" 
+        type="rostopic" 
+        args="pub $(arg pub_topic_name) $(arg pub_topic_type) $(arg pub_topic_message) -1"
+        output="screen">
+  </node>
+
+</launch>

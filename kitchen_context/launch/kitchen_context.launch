@@ -1,0 +1,21 @@
+<launch>
+
+  <!-- PR2's description with - wrist force torque sensor updated -->
+  <param name="robot_description" textfile="$(find kitchen_context)/urdf/robot.xml" />
+
+  <!-- kitchen context models urdfs -> ros parameter server -->
+  <include file="$(find kitchen_context)/launch/upload_models_on_rosparam_server.launch" />
+
+  <!-- start the rviz with the kitchen special configuration. -->
+  <node name="kitchen_context_visualization"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find kitchen_context)/config/kitchen_context_visualization.rviz"
+        respawn="true"/>
+
+
+  <!-- PR2's IK on top of PR2's joint controllers -->
+  <include file="$(find two_hand_ik_trajectory_executor)/launch/ik_trajectory_executor.launch" />
+
+
+</launch>

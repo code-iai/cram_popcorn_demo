@@ -1,0 +1,26 @@
+<launch>
+
+ <!-- this launch file publishes on topic "pub_topic_name" the initial location
+      for the AMCL localization -->
+
+ <arg name="pub_topic_name" value="/initialpose"/>
+ <arg name="pub_topic_type" value="geometry_msgs/PoseWithCovarianceStamped"/>
+ <arg name="pub_topic_message" value='"{header: {seq: 0,
+                                                 stamp: {secs: 0,
+                                                         nsecs: 0},
+                                                 frame_id: },
+                                        pose: {pose: {position: {x: 0.000, y: 1.500, z: 0.000},
+                                                      orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}},
+                                               covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
+                                                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}"' />
+
+  <node name="move_pr2_into_initial_position"
+        pkg="rostopic"
+        type="rostopic"
+        args="pub $(arg pub_topic_name) $(arg pub_topic_type) $(arg pub_topic_message) -1"
+        output="screen">
+  </node>
+
+</launch>

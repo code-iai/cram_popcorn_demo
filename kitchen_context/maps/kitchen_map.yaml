@@ -1,0 +1,10 @@
+image: kitchen_map.pgm
+resolution: 0.012500
+# this is altered because we want to alight 
+# the reference frame of the map
+# witht the reference frame of Gazebo!!!
+origin: [-10.500000, -9.450000, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

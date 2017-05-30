@@ -1,0 +1,30 @@
+<launch>
+
+ <!-- load the URDFs of the kitchen models on the ROS parameter server. -->
+
+ <param name="stove_table_description"
+        textfile="$(find kitchen_context)/models/stove_table/stove_table.urdf"/>
+
+ <param name="stove_table_drawer_left_description"
+        textfile="$(find kitchen_context)/models/stove_table/stove_table_drawer_left.urdf"/>
+
+ <param name="stove_table_drawer_right_description"
+        textfile="$(find kitchen_context)/models/stove_table/stove_table_drawer_right.urdf"/>
+
+ <param name="pot_description"
+        textfile="$(find kitchen_context)/models/pot/pot.urdf"/>
+
+ <param name="lid_description"
+        textfile="$(find kitchen_context)/models/lid/lid.urdf"/>
+
+ <param name="salt_cellar_description"
+        textfile="$(find kitchen_context)/models/salt_cellar/salt_cellar.urdf"/>
+
+ <param name="small_bowl_description"
+        textfile="$(find kitchen_context)/models/small_bowl/small_bowl.urdf"/>
+
+ <param name="deep_plate_description"
+        textfile="$(find kitchen_context)/models/deep_plate/deep_plate.urdf"/>
+
+</launch>
+

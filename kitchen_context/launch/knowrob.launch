@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- stars the json_prolog node which
+       - starts swi-prolog
+       - loads the knowrob libray -->
+
+  <param name="initial_package" type="string" value="kitchen_context" />
+
+  <node name="json_prolog" pkg="json_prolog" type="json_prolog_node" cwd="node" output="screen" />
+
+</launch>

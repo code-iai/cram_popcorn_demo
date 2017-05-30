@@ -1,0 +1,61 @@
+<launch>
+
+  <!-- PR2's description with - wrist force torque sensor updated -->
+  <param name="robot_description" textfile="$(find kitchen_context)/urdf/robot.xml" />
+
+  <!-- set use_sim_time flag -->
+  <param name="/use_sim_time" value="true" />
+
+  <!-- kitchen context models urdfs -> ros parameter server -->
+  <include file="$(find kitchen_context)/launch/upload_models_on_rosparam_server.launch" />
+
+  <!-- gzserver arguments -->
+  <arg name="verbose" value="--verbose"/>
+  <arg name="physics" value="ode"/>
+  <arg name="world_name" value="$(find kitchen_context)/worlds/stove_table.world"/>
+
+  <!-- start gzserver on the local machine -->
+  <!-- WARNING!!! Don't change the name "gazebo"!
+       The PR2 will not get spawned. -->
+  <!-- TODO(lisca): Find why the previous warning is valid.-->
+  <node name="gazebo"
+        pkg="gazebo_ros"
+        type="gzserver"
+        args="$(arg verbose)
+              -e $(arg physics)
+              $(arg world_name)"
+        output="screen"
+        respawn="false">
+  </node>
+
+  <!-- start gazebo client on local machine -->
+  <!-- use rviz instead of the client - only rviz can display
+       statically published urdfs -->
+  <!--
+  <node name="gazebo_client_local"
+        pkg="gazebo_ros"
+        type="gzclient"
+        args="$(arg verbose)"
+        respawn="false"
+        output="screen">
+  </node>
+  -->
+
+  <!-- start the rviz with the kitchen special configuration. -->
+  <node name="kitchen_context_visualization" 
+        pkg="rviz" 
+        type="rviz" 
+        args="-d $(find kitchen_context)/config/kitchen_context_visualization.rviz"
+        respawn="true"/>
+
+  <!-- PR2's default bringup script -->
+  <include file="$(find pr2_gazebo)/launch/pr2_bringup.launch" />
+
+  <!-- PR2's default controllers -->
+  <include file="$(find pr2_controller_configuration_gazebo)/launch/pr2_default_controllers.launch" />
+
+  <!-- PR2's IK on top of PR2's joint controllers -->
+  <include file="$(find two_hand_ik_trajectory_executor)/launch/ik_trajectory_executor.launch" />
+
+
+</launch>
