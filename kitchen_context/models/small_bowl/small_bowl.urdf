@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<robot name="small_bowl">
+  <link name="small_bowl_frame">
+    <visual>
+      <geometry>
+        <mesh filename="package://kitchen_context/models/small_bowl/meshes/small_bowl.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
+
+

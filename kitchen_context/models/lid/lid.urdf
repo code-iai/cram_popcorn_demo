@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<robot name="lid">
+  <link name="lid_frame">
+    <visual>
+      <geometry>
+        <mesh filename="package://kitchen_context/models/lid/meshes/lid.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
+

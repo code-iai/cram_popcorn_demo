@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<robot name="deep_plate">
+  <link name="deep_plate_frame">
+    <visual>
+      <geometry>
+        <mesh filename="package://kitchen_context/models/deep_plate/meshes/deep_plate.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<robot name="pot">
+  <link name="pot_frame">
+    <visual>
+      <geometry>
+        <mesh filename="package://kitchen_context/models/pot/meshes/pot.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
+

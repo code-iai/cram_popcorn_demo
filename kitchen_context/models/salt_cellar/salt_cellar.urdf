@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<robot name="salt_cellar">
+  <link name="salt_cellar_frame">
+    <visual>
+      <geometry>
+        <mesh filename="package://kitchen_context/models/salt_cellar/meshes/salt_cellar.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
+

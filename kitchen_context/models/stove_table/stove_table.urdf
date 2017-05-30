@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<robot name="stove_table">
+  <link name="stove_table_frame">
+    <visual>
+      <geometry>
+        <mesh filename="package://kitchen_context/models/stove_table/meshes/stove_table.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
