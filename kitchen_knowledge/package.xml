@@ -1,0 +1,34 @@
+<package>
+  <name>kitchen_knowledge</name>
+  <version>0.2.1</version>
+  <description>
+     kitchen_knowledge
+  </description>
+  <author>Boglarka Erdodi</author>
+  <maintainer email="kazhoyan@cs.uni-bremen.de">Gayane Kazhoyan</maintainer>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/kitchen_knowledge</url>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>cram_prolog</build_depend>
+  <build_depend>cram_robot_interfaces</build_depend>
+  <build_depend>cram_designators</build_depend>
+  <build_depend>cl_transforms_stamped</build_depend>
+  <build_depend>cl_urdf</build_depend>
+  <build_depend>roslisp</build_depend>
+  <build_depend>roslisp_utilities</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>cram_prolog</run_depend>
+  <run_depend>cram_robot_interfaces</run_depend>
+  <run_depend>cram_designators</run_depend>
+  <run_depend>cl_transforms_stamped</run_depend>
+  <run_depend>cl_urdf</run_depend>
+  <run_depend>roslisp</run_depend>
+  <run_depend>roslisp_utilities</run_depend>
+
+</package>
+
