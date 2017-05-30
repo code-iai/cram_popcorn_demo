@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE rdf:RDF [ 
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+  <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+  <!ENTITY knowrob "http://knowrob.org/kb/knowrob.owl#" >
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+  <!ENTITY qudt-unit "http://qudt.org/vocab/unit#" >
+  <!ENTITY stove-table-semantic-map "http://knowrob.org/kb/stove_table_semantic_map.owl#" >
+]>
+
+<rdf:RDF 
+
+  xmlns:knowrob="http://knowrob.org/kb/knowrob.owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+  xmlns:srdl2="http://knowrob.org/kb/srdl2.owl#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:qudt-unit="http://qudt.org/vocab/unit#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:stove-table-semantic-map="http://knowrob.org/kb/stove_table_semantic_map.owl#">
+
+  <!-- ======================= -->
+  <!-- |   Ontology Imports  | -->
+  <!-- ======================= -->
+
+
+  <!-- define the ontology of the semantic map -->
+  <owl:Ontology rdf:about="http://knowrob.org/kb/stove_table_semantic_map.owl">
+    <owl:imports rdf:resource="package://kitchen_context/owl/stove_table_workspace.owl"/>
+  </owl:Ontology>
+
+  <!-- ================================== -->
+  <!-- |   Stove Table Semantic Map  | -->
+  <!-- ================================== -->
+
+  <!-- the individual semantic map -->
+  <owl:NamedIndividual rdf:about="&stove-table-semantic-map;StoveTableMap">
+    <rdf:type rdf:resource="&knowrob;SemanticEnvironmentMap"/>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="&stove-table-semantic-map;timepoint_0000000001">
+    <rdf:type rdf:resource="&knowrob;TimePoint"/>
+  </owl:NamedIndividual>
+
+  <!-- =========================================================== -->
+  <!-- |   Individuals in Stove Table Semantic Map  | -->
+  <!-- =========================================================== -->
+
+  <!-- the stove table individual -->
+  <owl:NamedIndividual rdf:about="&stove-table-semantic-map;StoveTable_RbTLNllQ">
+    <rdf:type rdf:resource="&knowrob;StoveTable"/>
+    <knowrob:describedInMap rdf:resource="&stove-table-semantic-map;StoveTableMap"/>
+    <knowrob:pathToCadModel rdf:datatype="&xsd;string">package://kitchen_context/models/stove_table/meshes/stove_table.dae</knowrob:pathToCadModel>
+  </owl:NamedIndividual>
+
+  <!-- the perception event which links together:
+       - the stove table individual
+       - the transformation 
+       - the time point -->
+  <owl:NamedIndividual rdf:about="&knowrob;SemanticMapPerception_RbTLNllQ">
+    <rdf:type rdf:resource="&knowrob;SemanticMapPerception"/>
+    <knowrob:eventOccursAt rdf:resource="&stove-table-semantic-map;Transformation_RbTLNllQ"/>
+    <knowrob:startTime rdf:resource="&stove-table-semantic-map;timepoint_0000000001"/>
+    <knowrob:objectActedOn rdf:resource="&stove-table-semantic-map;StoveTable_RbTLNllQ"/>
+  </owl:NamedIndividual>
+
+  <!-- the transformation describing where the individual stove table is relative
+       to the stove table semantic map -->
+  <owl:NamedIndividual rdf:about="&stove-table-semantic-map;Transformation_RbTLNllQ">
+    <rdf:type rdf:resource="&knowrob;Transformation"/>
+    <knowrob:quaternion  rdf:datatype="&xsd;string">1.000 0.000 0.000 0.000</knowrob:quaternion>
+    <knowrob:translation rdf:datatype="&xsd;string">1.234 0.123 0.432</knowrob:translation>
+  </owl:NamedIndividual>
+
+
+  <!-- the left drawer individual -->
+  <owl:NamedIndividual rdf:about="&stove-table-semantic-map;LeftDrawer_abcdefgh">
+    <rdf:type rdf:resource="&knowrob;LeftDrawer"/>
+    <knowrob:describedInMap rdf:resource="&stove-table-semantic-map;StoveTableMap"/>
+    <knowrob:pathToCadModel rdf:datatype="&xsd;string">package://kitchen_context/models/drawer/meshes/drawer.dae</knowrob:pathToCadModel>
+  </owl:NamedIndividual>
+
+  <!-- the perception event which links together:
+       - the left drawer individual
+       - the transformation 
+       - the time point -->
+  <owl:NamedIndividual rdf:about="&knowrob;SemanticMapPerception_abcdefgh">
+    <rdf:type rdf:resource="&knowrob;SemanticMapPerception"/>
+    <knowrob:eventOccursAt rdf:resource="&stove-table-semantic-map;Transformation_abcdefgh"/>
+    <knowrob:startTime rdf:resource="&stove-table-semantic-map;timepoint_0000000001"/>
+    <knowrob:objectActedOn rdf:resource="&stove-table-semantic-map;LeftDrawer_abcdefgh"/>
+  </owl:NamedIndividual>
+
+  <!-- the transformation describing where the individual left drawer is relative
+       to the stove table semantic map -->
+  <owl:NamedIndividual rdf:about="&stove-table-semantic-map;Transformation_abcdefgh">
+    <rdf:type rdf:resource="&knowrob;Transformation"/>
+    <knowrob:quaternion  rdf:datatype="&xsd;string">1.000 0.000 0.000 0.000</knowrob:quaternion>
+    <knowrob:translation rdf:datatype="&xsd;string">1.234 0.123 0.432</knowrob:translation>
+  </owl:NamedIndividual>
+
+</rdf:RDF>

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+ <world name="popcorn">
+  <physics type="ode">
+   <gravity>0 0 -9.8</gravity>
+   <max_step_size>0.001</max_step_size>
+  </physics>
+  <scene>
+   <sky>
+    <clouds>
+     <speed>20</speed>
+    </clouds>
+   </sky>
+  </scene>
+  <gui>
+   <camera name="popcorn_camera">
+    <pose>5 1.6 1.0 0 0 3.14</pose>
+   </camera>
+  </gui>
+
+  <include>
+   <uri>model://ground_plane</uri>
+  </include>
+
+  <include>
+   <uri>model://sun</uri>
+  </include>
+
+  <include>
+   <name>chemlab_walls</name>
+   <uri>model://chemlab_walls</uri>
+   <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+  </include>
+
+  <include>
+   <name>pr2_cooks_popcorn</name>
+   <uri>model://pr2_description</uri>
+   <pose>0.000 0.000 0.000 0 0 0</pose>
+  </include>
+ 
+  <!--
+  <include>
+   <name>stove_table</name>
+   <uri>model://stove_table</uri>
+   <pose>1.427 0.0 0.0 0 0 0</pose>
+  </include>
+
+  <include>
+   <name>deep_plate_frame</name>
+   <uri>model://deep_plate</uri>
+   <pose>1.30 0.55 0.55 0 0 0</pose>
+  </include>
+
+  <include>
+   <name>small_bowl_frame</name>
+   <uri>model://small_bowl</uri>
+   <pose>1.30 -0.65 0.55 0 0 0</pose>
+  </include>
+
+  <include>
+   <name>salt_cellar_frame</name>
+   <uri>model://salt_cellar</uri>
+   <pose>1.50 0.7 0.75 0 0 0</pose>
+  </include>
+
+  <include>
+   <name>pot_frame</name>
+   <uri>model://pot</uri>
+   <pose>1.45 -0.6 0.80 0 0 0</pose>
+  </include>
+
+  <include>
+   <name>lid_frame</name>
+   <uri>model://lid</uri>
+   <pose>1.40 -0.49 0.50 0 0 0</pose>
+  </include>
+  -->
+
+ </world>
+</sdf>
