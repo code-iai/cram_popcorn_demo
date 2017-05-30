@@ -1,0 +1,204 @@
+;;; Copyright (c) 2013, 2016 Gheorghe Lisca <lisca@cs.uni-bremen.de>
+;;; All rights reserved.
+;;;
+;;; Redistribution and use in source and binary forms, with or without
+;;; modification, are permitted provided that the following conditions are met:
+;;;
+;;;     * Redistributions of source code must retain the above copyright
+;;;       notice, this list of conditions and the following disclaimer.
+;;;     * Redistributions in binary form must reproduce the above copyright
+;;;       notice, this list of conditions and the following disclaimer in the
+;;;       documentation and/or other materials provided with the distribution.
+;;;     * Neither the name of Gheorghe Lisca nor the names of his
+;;;       partners may be used to endorse or promote products derived from
+;;;       this software without specific prior written permission.
+;;;
+;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+;;; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+;;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+;;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+;;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+;;; CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+;;; POSSIBILITY OF SUCH DAMAGE.
+;;;
+
+(in-package :tf-utilities)
+
+(defparameter *start-stop-publish-delay* 1.0) ;; seconds
+
+(defun clone-transform-stamped (stamped-transform)
+
+  (make-instance
+      'cl-transforms-stamped:transform-stamped
+    :stamp 0.0
+    :frame-id (slot-value stamped-transform 'cl-transforms-stamped:frame-id)
+    :child-frame-id (slot-value stamped-transform 'cl-transforms-stamped:child-frame-id)
+    :translation (slot-value stamped-transform 'cl-transforms-stamped:translation)
+    :rotation (slot-value stamped-transform 'cl-transforms-stamped:rotation)))
+
+(defun start-projecting-object-at-location
+    (object-designator location-designator &optional (location-transform-offset
+                                                      (cl-transforms:make-identity-transform)))
+
+  ;; Create TF transform-stamped for each frames of the object-designator.
+  ;; Publish the TF transform-stamped on TF.
+
+  (let ((object-designator-key-value-pair-list (cram-designators::description object-designator))
+        (object-designator-projected (make-instance 'cram-designators:designator :description ()))
+        object-designator-projected-key-value-pair-list)
+
+    (dolist (object-designator-key-value-pair
+             object-designator-key-value-pair-list
+             object-designator-projected-key-value-pair-list)
+
+      (let ((key (first object-designator-key-value-pair))
+            (value (second object-designator-key-value-pair)))
+        
+        (if (eq (type-of value) 'cl-transforms-stamped:transform-stamped)
+            ;; the value is a stamped transform
+            (let ((transform-stamped-cloned (clone-transform-stamped value))
+                  (frame-id (slot-value value 'cl-transforms-stamped:frame-id))
+                  (child-frame-id (slot-value value 'cl-transforms-stamped:child-frame-id)))
+              
+              ;; Update the frames of the cloned transform stamped.
+              (setf (slot-value transform-stamped-cloned 'cl-transforms-stamped:frame-id)
+                    (concatenate 'string frame-id "_projected"))
+              (setf (slot-value transform-stamped-cloned 'cl-transforms-stamped:child-frame-id)
+                    (concatenate 'string child-frame-id "_projected"))
+              
+              ;; Save the cloned transform-stamped.
+              (push (list key transform-stamped-cloned)
+                    object-designator-projected-key-value-pair-list))
+            
+            ;; the value is something else than a stamped transform
+            (push (list key value)
+                  object-designator-projected-key-value-pair-list))))
+
+    ;; set the description of the object projected designator
+    (setf (slot-value object-designator-projected 'cram-designators::description)
+          object-designator-projected-key-value-pair-list)
+
+    ;; make the transform-stamped of the object relative to the frame of the location.
+    (let ((object-frame-projected
+            (cram-designators:desig-prop-value object-designator-projected :object-body-frame)))
+
+      ;; the frame-id of the object will overlap the child-frame-id of the location.
+      (setf (slot-value object-frame-projected 'cl-transforms-stamped:frame-id)
+            (slot-value (cram-designators:desig-prop-value location-designator :location-frame)
+                        'cl-transforms-stamped:child-frame-id))      
+      (setf
+       (slot-value object-frame-projected 'cl-transforms-stamped:translation)
+       (slot-value location-transform-offset 'cl-transforms:translation))
+
+      (setf
+       (slot-value object-frame-projected 'cl-transforms-stamped:rotation)
+       (slot-value location-transform-offset 'cl-transforms:rotation)))
+
+    (let ((object-designator-key-value-pair-list (cram-designators::description object-designator-projected)))
+
+      (dolist (object-designator-key-value-pair
+               object-designator-key-value-pair-list)
+        
+        (let ((value (second object-designator-key-value-pair)))
+
+          (if  (eq (type-of value) 'cl-transforms-stamped:transform-stamped)
+               (cl-transforms-stamped:start-publishing-transforms-static-globaly value))))
+      
+      ;; wait for tf server to pick up the new transforms
+      (sleep *start-stop-publish-delay*))
+    
+    ;; return object's projection designator
+    object-designator-projected))
+
+(defun stop-projecting-object-at-location (object-designator)
+
+  (let ((object-designator-key-value-pair-list (cram-designators::description object-designator))
+        object-designator-projected-key-value-pair-list)
+
+    (dolist (object-designator-key-value-pair
+             object-designator-key-value-pair-list
+             object-designator-projected-key-value-pair-list)
+
+      (let ((value (second object-designator-key-value-pair)))
+         
+        (if (eq (type-of value) 'cl-transforms-stamped:transform-stamped)
+            ;; the value is a stamped transform              
+            (cl-transforms-stamped:stop-publishing-transforms-static-globaly value))))))
+
+;; todo(lisca): make transform-offset a &key parameter.
+(defun update-object-location (object-designator location-designator transform-offset)
+  "Return a new object designator identical with `object-designator'
+   but being located at `location-designator'"
+
+  (let ((object-body-frame (cram-designators:desig-prop-value object-designator :object-body-frame))
+        (new-object-body-frame (cram-designators:desig-prop-value location-designator :location-frame)))
+
+    (setf
+     (slot-value object-body-frame 'cl-transforms-stamped:frame-id)
+     (slot-value new-object-body-frame 'cl-transforms-stamped:child-frame-id))
+
+    (setf
+     (slot-value object-body-frame 'cl-transforms-stamped:translation)
+     (slot-value transform-offset 'cl-transforms:translation))
+
+    (setf
+     (slot-value object-body-frame 'cl-transforms-stamped:rotation)
+     (slot-value transform-offset 'cl-transforms:rotation))
+
+    ;; publish on tf the new transform stamped with the new parent
+    (cl-transforms-stamped:start-publishing-transforms-static-globaly object-body-frame)
+
+    ;; wait for tf server to pick up the new transforms
+    (sleep (+ *start-stop-publish-delay* 0.25)))
+  
+  ;; no new object designator is created
+  nil)
+
+;; todo(lisca): make transform-offset a &key parameter.
+(defun update-location-frame-in-location-designator (location-designator location-designator-reference transform-offset)
+  "Return a new location designator identical with `location-designator'
+   but being located at `location-designator-reference'"
+
+  (setf
+   (slot-value (cram-designators:desig-prop-value location-designator :location-frame)
+               'cl-transforms-stamped:frame-id)
+   (slot-value (cram-designators:desig-prop-value location-designator-reference :location-frame)
+               'cl-transforms-stamped:child-frame-id))
+
+  (setf
+   (slot-value (cram-designators:desig-prop-value location-designator :location-frame)
+               'cl-transforms-stamped:translation)
+   (slot-value transform-offset 'cl-transforms:translation))
+
+  (setf
+   (slot-value (cram-designators:desig-prop-value location-designator :location-frame)
+               'cl-transforms-stamped:rotation)
+   (slot-value transform-offset 'cl-transforms:rotation))
+
+  ;; publish on tf the new transform stamped with the new parent
+  (cl-transforms-stamped:start-publishing-transforms-static-globaly
+   (cram-designators:desig-prop-value location-designator :location-frame))
+
+  ;; wait for tf server to pick up the new transforms
+  (sleep (+ *start-stop-publish-delay* 0.25))
+  
+  nil)
+
+(defun designator-property-as-location-designator (designator designator-property)
+
+  (assert designator)
+  (assert designator-property)
+
+  (let ((location-frame (cram-designators:desig-prop-value designator designator-property))
+        (location-tf-frame-name
+          (slot-value 
+           (cram-designators:desig-prop-value designator designator-property)
+           'cl-transforms-stamped::child-frame-id)))
+
+    (make-instance 'cram-designators:designator
+      :description `((:location-frame ,location-frame)
+                     (:location-tf-frame-name ,location-tf-frame-name)))))
