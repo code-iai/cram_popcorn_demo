@@ -1,0 +1,20 @@
+<launch>
+
+  <!-- LOAD RIGHT ARM IK -->
+  <!-- include file="$(find pr2_arm_navigation_kinematics)/launch/pr2_ik_rarm_node.launch"/ -->
+  <node pkg="pr2_arm_kinematics" type="pr2_arm_kinematics_node" name="pr2_right_arm_kinematics" output="screen">    
+    <param name="tip_name" value="r_wrist_roll_link" />     
+    <param name="root_name" value="torso_lift_link" />  
+  </node>
+  
+  <!-- LOAD LEFT ARM IK -->
+  <!-- include file="$(find pr2_arm_navigation_kinematics)/launch/pr2_ik_larm_node.launch"/ -->
+  <node pkg="pr2_arm_kinematics" type="pr2_arm_kinematics_node" name="pr2_left_arm_kinematics" output="screen">
+    <param name="tip_name" value="l_wrist_roll_link" />
+    <param name="root_name" value="torso_lift_link" />
+  </node>
+  
+  <!-- START IK_TRAJECTORY_EXECUTOR NODE -->
+  <node pkg="two_hand_ik_trajectory_executor" type="ik_trajectory_executor" name="ik_trajectory_executor" output="screen"/>
+  
+</launch>  
