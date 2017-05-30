@@ -1,0 +1,9 @@
+#goal definition
+string object_type
+string object_frame_id_name
+---
+#result definition
+float32[] object_pose  #geometry_msgs/Pose object_pose
+---
+#feedback
+string object_name

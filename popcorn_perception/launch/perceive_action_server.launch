@@ -1,0 +1,38 @@
+
+<launch>
+
+<node pkg="popcorn_perception" type="perceive_server" name="perceive_server" output="screen"></node>
+
+
+ <!-- Pot dimensions and VoI -->
+ <param name="pot_body_radius"        type="double" value="0.105000" /> 
+ <rosparam param="pot_voi_max">       [ 0.20,  0.20,  0.25] </rosparam>
+ <rosparam param="pot_voi_min">       [-0.20, -0.20,  0.01] </rosparam>
+
+ <!-- Lid dimensions -->
+ <param name="lid_level_min"          type="double" value="0.080000" />
+ <param name="lid_level_max"          type="double" value="0.105000" />
+ <param name="lid_radius_expected"    type="double" value="0.065000" /> <!-- 0.11 -->
+ <param name="lid_radius_tolerance"   type="double" value="0.005000" /> 
+ <rosparam param="lid_voi_max">       [ 0.15,  0.10,  0.10] </rosparam>
+ <rosparam param="lid_voi_min">       [-0.13, -0.20,  0.01] </rosparam>
+ 
+ <!-- Small bowl dimensions and VoI -->
+ <param name="small_bowl_radius"      type="double" value="0.065000" />
+ <param name="small_bowl_tolerance"   type="double" value="0.005000" /> 
+ <rosparam param="small_bowl_voi_max">[ 0.10,  0.10,  0.15] </rosparam>
+ <rosparam param="small_bowl_voi_min">[-0.10, -0.10,  0.01] </rosparam>
+ 
+ <!-- Deep plate dimensions and VoI -->
+ <param name="deep_plate_radius"      type="double" value="0.110000" />
+ <param name="deep_plate_tolerance"   type="double" value="0.005000" /> 
+ <rosparam param="deep_plate_voi_max">[ 0.05,  0.15,  0.10] </rosparam>
+ <rosparam param="deep_plate_voi_min">[-0.25, -0.15,  0.01] </rosparam>
+
+ <!-- Salt cellar dimensions and VoI -->
+ <param name="salt_cellar_radius"      type="double" value="0.020000" />
+ <param name="salt_cellar_tolerance"   type="double" value="0.005000" /> 
+ <rosparam param="salt_cellar_voi_max">[ 0.15,  0.15,  0.20] </rosparam>
+ <rosparam param="salt_cellar_voi_min">[-0.15, -0.15,  0.05] </rosparam>
+
+</launch>
